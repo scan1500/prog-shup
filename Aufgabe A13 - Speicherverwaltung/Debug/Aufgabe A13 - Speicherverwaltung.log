@@ -1,0 +1,5 @@
+﻿  list.c
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a13 - speicherverwaltung\list.c(36): warning C4098: "main": "void"-Funktion gibt einen Wert zurück
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a13 - speicherverwaltung\list.c(66): warning C4098: "main": "void"-Funktion gibt einen Wert zurück
+  Aufgabe A13 - Speicherverwaltung.vcxproj -> C:\Users\Nutzer\Documents\Visual Studio 2017\Projects\ShuP\Debug\Aufgabe A13 - Speicherverwaltung.exe
+  Aufgabe A13 - Speicherverwaltung.vcxproj -> C:\Users\Nutzer\Documents\Visual Studio 2017\Projects\ShuP\Debug\Aufgabe A13 - Speicherverwaltung.pdb (Partial PDB)

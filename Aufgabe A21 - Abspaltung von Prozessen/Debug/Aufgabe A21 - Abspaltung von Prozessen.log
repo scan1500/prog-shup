@@ -1,0 +1,7 @@
+﻿  fork.c
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a21 - abspaltung von prozessen\fork.c(5): warning C4013: "fork" undefiniert; Annahme: extern mit Rückgabetyp int
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a21 - abspaltung von prozessen\fork.c(7): warning C4013: "getppid" undefiniert; Annahme: extern mit Rückgabetyp int
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a21 - abspaltung von prozessen\fork.c(8): warning C4013: "getpid" undefiniert; Annahme: extern mit Rückgabetyp int
+fork.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol "_fork" in Funktion "_main".
+fork.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol "_getppid" in Funktion "_main".
+C:\Users\Nutzer\Documents\Visual Studio 2017\Projects\ShuP\Debug\Aufgabe A21 - Abspaltung von Prozessen.exe : fatal error LNK1120: 2 nicht aufgelöste Externe

@@ -1,0 +1,2 @@
+﻿  fork2.c
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a22 - warten und beenden von kindprozessen\fork2.c(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "unistd.h": No such file or directory
