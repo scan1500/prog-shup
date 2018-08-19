@@ -1,0 +1,6 @@
+﻿  shell.c
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a25 - midi-shell\shell.c(17): warning C4013: "getcwd" undefiniert; Annahme: extern mit Rückgabetyp int
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a25 - midi-shell\shell.c(36): warning C4013: "execv" undefiniert; Annahme: extern mit Rückgabetyp int
+c:\users\nutzer\documents\visual studio 2017\projects\shup\aufgabe a25 - midi-shell\shell.c(17): warning C4477: "printf": Die Formatzeichenfolge "%s" erfordert ein Argument vom Typ "char *", das variadic-Argument "1" weist aber den Typ "int" auf.
+shell.obj : error LNK2005: _main ist bereits in prog.obj definiert.
+C:\Users\Nutzer\Documents\Visual Studio 2017\Projects\ShuP\Debug\Aufgabe A25 - Midi-Shell.exe : fatal error LNK1169: Mindestens ein mehrfach definiertes Symbol gefunden.

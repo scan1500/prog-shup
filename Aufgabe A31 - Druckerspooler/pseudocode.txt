@@ -1,0 +1,126 @@
+Defines:
+#define Spoolergroesse 5
+#define Druckeranzahl 2
+#define Auftragszahl 10
+
+Semaphoren:
+sem leer_spooler = 5;
+sem voll_spooler = 0;
+sem mutex_spooler = 1;
+
+sem leer_drucker = 2;
+sem voll_drucker = 0;
+sem mutex_drucker = 1;
+
+Shared-Mem.:
+int *naechste_freistelle;
+int *naechster_druckeintrag;
+int *anzahl_druckauftraege;
+struct druckdaten *spooler_buffer;
+struct druckdaten *drucker_buffer;
+
+void erzeuge_druckauftrag()
+{
+  int daten = erzeuge_zufaellige_daten_h();
+  int seitenzahl = erzeuge_zufallszahl_h();
+
+  daten_ausgeben_h();  // Daten zur Ueberpruefung ausgeben
+
+  wait(leer_spooler);  // Dekrementiere leere Stellen um 1
+  wait(mutex_spooler); // Nehme mutex bzw. Sperrung des krit. Bereichs
+
+  spooler_buffer[*naechste_freistelle].daten = daten;
+  spooler_buffer[*naechste_freistelle].seitenzahl = seitenzahl;
+  *naechste_freistelle = (*naechste_freistelle+1) % Spoolergroesse;
+  
+  signal(mutex_spooler); // Gebe mutex wieder frei für anderen Prozess
+  signal(voll_spooler);  // Inkrementiere volle Stellen um 1
+
+  exit(0); // Beende den Druckauftrags-Prozess
+}
+
+void druckerspooler()
+{
+  struct druckdaten lokale_daten;
+  int naechster_spoolereintrag=0, naechster_drucker=0;
+  while(1) // oder wenn Auftragszahl bekannt "for(...)"
+  {
+    wait(full_spooler);     // Dekrementiere volle Stellen um 1
+    // wait(mutex_spooler); // Nehme mutex bzw. Sperrung des krit. Bereichs
+    // Sperrung (hier!) nicht unbedingt noetig da nur 1 Spooler 
+    // auf krit. Bereich zugreift und keine Bufferinhalte verändert
+    // bei mehreren Spoolern waeren fuer naechster_spoolereintrag und
+    // naechster_drucker Shared-Memory Eintraege noetig!
+
+    lokale_daten = spooler_buffer[naechster_spoolereintrag];
+
+    // signal(mutex_spooler);  // Gebe mutex wieder frei für anderen Prozess
+    signal(leer_spooler);      // Inkrementiere leere Stellen um 1
+    
+    lokale_daten_ausgeben_h();  // Daten zur Ueberpruefung ausgeben
+
+    // ---------------------------------------------------------------
+
+    wait(leer_drucker);   // Dekrementiere leere Stellen um 1
+    // wait(mutex_drucker);   // Nehme mutex bzw. Sperrung des krit. Bereichs
+    drucker_buffer[naechster_drucker] = lokale_daten;
+    // signal(mutex_drucker); // Gebe mutex wieder frei für anderen Prozess
+    signal(voll_drucker);
+
+    naechster_spoolereintrag = (naechster_spoolereintrag) % Spoolergroesse;
+    naechster_drucker = (naechster_drucker) % Druckeranzahl;
+  }
+}
+
+void drucker()
+{
+  int anzahl_drucke;
+  struct druckdaten lokale_daten;
+  while(1)
+  {
+    if(anzahl_drucke == Auftragszahl)
+      exit(0);
+
+    wait(voll_drucker);  // Dekrementiere leere Stellen um 1
+    wait(mutex_drucker); // Nehme mutex bzw. Sperrung des krit. Bereichs
+
+    lokale_daten = drucker_buffer[*naechster_druckeintrag];
+    *naechster_druckeintrag = (*naechster_druckeintrag+1) % Druckeranzahl;
+    *anzahl_druckauftraege = *anzahl_druckauftraege + 1;
+    anzahl_drucke = *anzahl_druckauftraege;
+
+    signal(mutex_drucker); // Gebe mutex wieder frei für anderen Prozess
+    // An dieser Stelle darf der aktuelle Buffereintrag für einen neuen Druckauftrag 
+    // ueberschrieben werden, da die Daten bereits lokal gesichert wurden. Trotzdem
+    // ist der Drucker noch mit dem Drucken der Daten beschäftigt und gibt seinen
+    // Platz erst nach dem Ende des Druckvorgangs wieder für neue Aufträge frei.
+
+    lokale_daten_ausgeben_h(); // Daten zur Ueberpruefung ausgeben
+    druckvorgang_h();   // Druckzeit = Seitenanzahl
+    
+    signal(leer_drucker);
+  }
+}
+
+void main()
+{
+  semaphoren_init_h();
+  sharedmemory_init_h();
+  
+  spooler_erzeugen_h();  // fork();
+  drucker_erzeugen_h();  // fork();
+  drucker_erzeugen_h();  // fork();
+
+  for(int i=0; i < Auftragszahl; i++)
+  {
+    zufaellige_wartezeit_h();
+    auftraege_erzeugen();      // fork();
+  }
+
+  warte_auf_alle_prozesse_h(); // Damit main() das Programm nicht vorzeitig beendet
+
+  semaphoren_loeschen_h();
+
+  shared_mem_loesen_h();  // detach
+  shared_mem_loeschen_h;  // remove
+}
